@@ -82,41 +82,27 @@ p {
   z-index: 1;
   width: 1rem;
   height: 1rem;
+  transition: all 0.1s linear;
+  border-radius: 0.25rem;
+}
+
+.checkbox:checked + label span::after {
+  content: "";
+  display: block;
+  position: relative;
+  top: 3px;
+  left: 6px;
+  width: 0.25rem;
+  height: 0.5rem;
+  border: solid black;
+  z-index: 10;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }
 
 .checkbox:checked + label span::before {
   background: var(--orange);
   border: 2px solid var(--orange);
+  transform: rotateY(180deg);
+  border-radius: 0.25rem;
 }
-
-/* .options input {
-  display: none;
-}
-
-.options label {
-  display: inline-block;
-  width: 25px;
-  height: 19px;
-  margin: 0 5px -4px 0;
-  &:before,
-  &:after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    width: 1rem;
-    height: 1rem;
-    background: transparent;
-    border: 2px solid var(--orange);
-  }
-  &:after {
-    z-index: 0;
-    border: none;
-  }
-}
-
-.options input:checked + label {
-  &:before {
-    transform: rotate(180deg);
-    background: var(--orange);
-  }
-} */

@@ -8,12 +8,35 @@ const partOfSpeech = document.getElementById("partOfSpeech");
 const pronunciation = document.getElementById("pronunciation");
 const examples = document.getElementById("examples");
 
-const defCheck = document.getElementById("defCheck");
-const synCheck = document.getElementById("synCheck");
-const antCheck = document.getElementById("antCheck");
-const partCheck = document.getElementById("partCheck");
-const proCheck = document.getElementById("proCheck");
-const exaCheck = document.getElementById("exaCheck");
+// const defCheck = document.getElementById("defCheck");
+// const synCheck = document.getElementById("synCheck");
+// const antCheck = document.getElementById("antCheck");
+// const partCheck = document.getElementById("partCheck");
+// const proCheck = document.getElementById("proCheck");
+// const exaCheck = document.getElementById("exaCheck");
+
+const checkbox = document.querySelectorAll(".checkbox");
+// checkbox[0].addEventListener("change", () => {
+//   console.log("CHANGED");
+// });
+
+let checkObj = {
+  1: false,
+  2: false,
+  3: false,
+  4: false,
+  5: false,
+  6: false,
+};
+
+checkbox.forEach((box, index) =>
+  box.addEventListener("change", () => {
+    console.log("CHANGED:", index);
+
+    if (index === 0 || index === 1 || index === 3 || index === 4)
+      checkObj[index + 1] = !checkObj[index + 1];
+  })
+);
 
 input.addEventListener("input", () => {
   input.style.height = "auto";
@@ -34,7 +57,7 @@ const getSelectedData = () => {
 };
 getSelectedData().then((selectedData) => {
   input.value = selectedData;
-  // getWordDetails(selectedData);
+  console.log("TEXT:", selectedData);
   // getOpposites(selectedData);
   // getExamples(selectedData);
 });
@@ -85,12 +108,15 @@ const getWordDetails = (selectedData) => {
       const response = await fetch(url, options);
       const result = await response.json();
 
-      if (defCheck.checked) {
-        console.log("CHECKED");
-      } else {
-        console.log("NOT CHECKED");
-      }
-      definition.innerText = result.results[0].definition;
+      if (checkObj[1] === true) console.log("DISPLAY");
+      else console.log("DON'T");
+
+      // if (checkObj[1] === true) {
+      //   definition.innerText = "DEFINITION:" + result.results[0].definition;
+      // } else {
+      //   definition.innerText = "";
+      // }
+
       partOfSpeech.innerText = result.results[0].partOfSpeech;
       synonyms.innerText = result.results[0].synonyms[0];
       // result.results[0].synonyms[1];
