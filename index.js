@@ -3,27 +3,17 @@ const translatedText = document.getElementById("translated-text");
 
 const definition = document.getElementById("definition");
 const synonyms = document.getElementById("synonyms");
-const opposites = document.getElementById("opposites");
+const antonyms = document.getElementById("antonyms");
 const partOfSpeech = document.getElementById("partOfSpeech");
 const pronunciation = document.getElementById("pronunciation");
 const examples = document.getElementById("examples");
 
-// const defCheck = document.getElementById("defCheck");
-// const synCheck = document.getElementById("synCheck");
-// const antCheck = document.getElementById("antCheck");
-// const partCheck = document.getElementById("partCheck");
-// const proCheck = document.getElementById("proCheck");
-// const exaCheck = document.getElementById("exaCheck");
-
 const checkbox = document.querySelectorAll(".checkbox");
-// checkbox[0].addEventListener("change", () => {
-//   console.log("CHANGED");
-// });
 
-let checkObj = {
-  1: false,
-  2: false,
-  3: false,
+let isActive = {
+  1: true,
+  2: true,
+  3: true,
   4: false,
   5: false,
   6: false,
@@ -31,10 +21,27 @@ let checkObj = {
 
 checkbox.forEach((box, index) =>
   box.addEventListener("change", () => {
-    console.log("CHANGED:", index);
-
-    if (index === 0 || index === 1 || index === 3 || index === 4)
-      checkObj[index + 1] = !checkObj[index + 1];
+    isActive[index + 1] = !isActive[index + 1];
+    switch (index) {
+      case 0:
+        displayDef();
+        break;
+      case 1:
+        displaySyn();
+        break;
+      case 2:
+        displayAnt();
+        break;
+      case 3:
+        displayPart();
+        break;
+      case 4:
+        displayPro();
+        break;
+      case 5:
+        displayExa();
+        break;
+    }
   })
 );
 
@@ -57,9 +64,9 @@ const getSelectedData = () => {
 };
 getSelectedData().then((selectedData) => {
   input.value = selectedData;
-  console.log("TEXT:", selectedData);
-  // getOpposites(selectedData);
-  // getExamples(selectedData);
+  getWordDetails(selectedData);
+  getOpposites(selectedData);
+  getExamples(selectedData);
 });
 
 const getTranslatedText = (selectedData) => {
@@ -83,7 +90,6 @@ const getTranslatedText = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log(result.data.translations[0].translatedText);
       translatedText.innerText = result.data.translations[0].translatedText;
     } catch (error) {
       console.error(error);
@@ -107,20 +113,10 @@ const getWordDetails = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-
-      if (checkObj[1] === true) console.log("DISPLAY");
-      else console.log("DON'T");
-
-      // if (checkObj[1] === true) {
-      //   definition.innerText = "DEFINITION:" + result.results[0].definition;
-      // } else {
-      //   definition.innerText = "";
-      // }
-
-      partOfSpeech.innerText = result.results[0].partOfSpeech;
-      synonyms.innerText = result.results[0].synonyms[0];
-      // result.results[0].synonyms[1];
-      pronunciation.innerText = result.pronunciation.all;
+      displayDef(result);
+      displaySyn(result);
+      displayPart(result);
+      displayPro(result);
     } catch (error) {
       console.error(error);
     }
@@ -131,7 +127,6 @@ const getOpposites = (selectedData) => {
   word = selectedData.trim();
 
   const url = `https://wordsapiv1.p.rapidapi.com/words/${word}/antonyms`;
-  // const url = `https://wordsapiv1.p.rapidapi.com/words/${selectedData}/antonyms`;
   const options = {
     method: "GET",
     headers: {
@@ -144,7 +139,7 @@ const getOpposites = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      opposites.innerText = result.antonyms[0];
+      displayAnt(result);
     } catch (error) {
       console.error(error);
     }
@@ -167,9 +162,65 @@ const getExamples = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      examples.innerText = result.examples[0];
+      displayExa(result);
     } catch (error) {
       console.error(error);
     }
   })();
 };
+
+const displayDef = (result) => {
+  if (isActive[1] === true) {
+    definition.style.display = "block";
+    definition.innerHTML = `<span>DEFINITION: </span> ${result.results[0].definition}`;
+  } else {
+    definition.style.display = "none";
+  }
+};
+const displaySyn = (result) => {
+  if (isActive[2] === true) {
+    synonyms.style.display = "block";
+    synonyms.innerHTML = `<span>SYNONYMS: </span> ${result.results[0].synonyms[0]}, ${result.results[0].synonyms[1]}`;
+  } else {
+    synonyms.style.display = "none";
+  }
+};
+const displayAnt = (result) => {
+  if (isActive[3] === true) {
+    antonyms.style.display = "block";
+    antonyms.innerHTML = `<span>ANTONYMS: </span> ${result.antonyms[0]}, ${result.antonyms[1]}`;
+  } else {
+    antonyms.style.display = "none";
+  }
+};
+const displayPart = (result) => {
+  if (isActive[4] === true) {
+    partOfSpeech.style.display = "block";
+    partOfSpeech.innerHTML = `<span>PART OF SPEECH: </span> ${result.results[0].partOfSpeech}`;
+  } else {
+    partOfSpeech.style.display = "none";
+    partOfSpeech.innerHTML = `<span>PART OF SPEECH: </span> ${result.results[0].partOfSpeech}`;
+  }
+};
+const displayPro = (result) => {
+  if (isActive[5] === true) {
+    pronunciation.style.display = "block";
+    pronunciation.innerHTML = `<span>PRONUNCIATION: </span> ${result.pronunciation.all}`;
+  } else {
+    pronunciation.style.display = "none";
+    pronunciation.innerHTML = `<span>PRONUNCIATION: </span> ${result.pronunciation.all}`;
+  }
+};
+const displayExa = (result) => {
+  if (isActive[6] === true) {
+    examples.style.display = "block";
+    examples.innerHTML = `<span>EXAMPLES OF USAGE: </span> ${result.examples[0]}, ${result.examples[1]}`;
+  } else {
+    examples.style.display = "none";
+    examples.innerHTML = `<span>EXAMPLES OF USAGE: </span> ${result.examples[0]}, ${result.examples[1]}`;
+  }
+};
+
+// displayPart();
+// displayPro();
+// displayExa();
