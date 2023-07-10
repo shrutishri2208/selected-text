@@ -14,7 +14,7 @@
 <body>
     <div class="container">
         <header class="title">TITLE</header>
-        <textarea type="text" name="input" id="input" value="Initial Text"></textarea>
+        <textarea type="text" name="wordInput" id="wordInput" value="Initial Text"></textarea>
 
         <div class="details-container">
             <div class="detail">
@@ -71,8 +71,21 @@
             </div>
         </div>
 
+        <div class="line"></div>
+
+        <div class="translate-container">
+            <div style="display: flex;column-gap: 1rem;align-items: center; justify-content: center;
+">
+                <p>TRANSLATE TO: </p>
+                <select name="langSelect" id="langSelect">
+                </select>
+            </div>
+            <textarea type="text" name="translatedText" id="translatedText"></textarea>
+        </div>
+
     </div>
 
+    <script src="languages.js"></script>
     <script src="index.js"></script>
 </body>
 

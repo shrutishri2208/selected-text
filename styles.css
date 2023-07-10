@@ -22,7 +22,7 @@ body {
   margin: 1rem 0rem;
 }
 
-#input {
+#wordInput {
   height: auto;
   min-height: 2rem;
   width: 89%;
@@ -33,7 +33,6 @@ body {
   color: var(--orange);
   font-size: 1.1rem;
   font-weight: bolder;
-  resize: none;
 }
 
 .details-container {
@@ -93,6 +92,19 @@ p {
   border-radius: 0.25rem;
 }
 
+.checkbox:checked:disabled + label span::before,
+.checkbox:disabled + label span::before {
+  content: "";
+  background: gray;
+  border: 2px solid gray;
+  position: absolute;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  transition: all 0.4s linear;
+  border-radius: 0.25rem;
+}
+
 .checkbox:checked + label span::after {
   content: "";
   display: block;
@@ -112,4 +124,43 @@ p {
   border: 2px solid var(--orange);
   transform: rotateY(180deg);
   border-radius: 0.25rem;
+}
+
+.translate-container {
+  margin: 2rem 0rem;
+}
+
+.translate-container p {
+  font-size: 0.9rem;
+  font-weight: bolder;
+  color: var(--orange);
+}
+
+.translate-container select {
+  background-color: black;
+  color: var(--orange);
+  border: 2px solid var(--orange);
+  border-radius: 0.25rem;
+  padding: 0.2rem;
+}
+
+#translatedText {
+  height: auto;
+  min-height: 2rem;
+  width: 89%;
+  padding: 0.6rem 1rem;
+  border-radius: 0.2rem;
+  border: 2px solid var(--orange);
+  background: none;
+  color: var(--orange);
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: bolder;
+}
+
+.line {
+  margin-top: 2rem;
+  height: 0.1rem;
+  width: 100%;
+  background-color: var(--orange);
 }

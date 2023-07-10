@@ -1,5 +1,5 @@
-const input = document.getElementById("input");
-const translatedText = document.getElementById("translated-text");
+const wordInput = document.getElementById("wordInput");
+const translatedText = document.getElementById("translatedText");
 
 const definition = document.getElementById("definition");
 const synonyms = document.getElementById("synonyms");
@@ -9,6 +9,8 @@ const pronunciation = document.getElementById("pronunciation");
 const examples = document.getElementById("examples");
 
 const checkbox = document.querySelectorAll(".checkbox");
+
+// const langSelect = document.getElementById("langSelect");
 
 let isActive = {
   1: true,
@@ -45,11 +47,18 @@ checkbox.forEach((box, index) =>
   })
 );
 
-input.addEventListener("input", () => {
-  input.style.height = "auto";
-  let scrollHeight = input.scrollHeight;
-  if (scrollHeight > input.clientHeight) {
-    input.style.height = scrollHeight + "px";
+wordInput.addEventListener("input", () => {
+  wordInput.style.height = "auto";
+  let scrollHeight = wordInput.scrollHeight;
+  if (scrollHeight > wordInput.clientHeight) {
+    wordInput.style.height = scrollHeight + "px";
+  }
+});
+translatedText.addEventListener("input", () => {
+  wordInput.style.height = "auto";
+  let scrollHeight = wordInput.scrollHeight;
+  if (scrollHeight > wordInput.clientHeight) {
+    wordInput.style.height = scrollHeight + "px";
   }
 });
 
@@ -62,40 +71,28 @@ const getSelectedData = () => {
     });
   });
 };
-getSelectedData().then((selectedData) => {
-  input.value = selectedData;
-  getWordDetails(selectedData);
-  getOpposites(selectedData);
-  getExamples(selectedData);
+
+langSelect.addEventListener("change", () => {
+  getSelectedData().then((selectedData) => {
+    wordInput.value = selectedData;
+    getTranslatedText(selectedData, langSelect.value);
+  });
 });
 
-const getTranslatedText = (selectedData) => {
-  const url = "https://google-translate1.p.rapidapi.com/language/translate/v2";
-  const options = {
-    method: "POST",
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-      "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Key": "6624c4b9cdmsh7534e3ca67f64ddp18e5e9jsn2a8c6588663e",
-      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
-    },
-    body: new URLSearchParams({
-      q: selectedData,
-      target: "hi",
-      source: "en",
-    }),
-  };
-
-  (async () => {
-    try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      translatedText.innerText = result.data.translations[0].translatedText;
-    } catch (error) {
-      console.error(error);
-    }
-  })();
-};
+getSelectedData().then((selectedData) => {
+  wordInput.value = selectedData;
+  const noOFWords = selectedData.trim().split(/\s+/);
+  if (noOFWords.length === 1) {
+    getWordDetails(selectedData);
+    getOpposites(selectedData);
+    getExamples(selectedData);
+  } else {
+    checkbox.forEach((item) => (item.disabled = true));
+    definition.innerText = "";
+    synonyms.innerText = "";
+    antonyms.innerText = "";
+  }
+});
 
 const getWordDetails = (selectedData) => {
   word = selectedData.trim();
@@ -221,6 +218,34 @@ const displayExa = (result) => {
   }
 };
 
-// displayPart();
-// displayPro();
-// displayExa();
+// langSelect.addEventListener("change", () => {
+//   getTranslatedText(selectedData, langSelect.value);
+// });
+
+const getTranslatedText = (selectedData, langSelect) => {
+  const url = "https://google-translate1.p.rapidapi.com/language/translate/v2";
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "Accept-Encoding": "application/gzip",
+      "X-RapidAPI-Key": "6624c4b9cdmsh7534e3ca67f64ddp18e5e9jsn2a8c6588663e",
+      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+    },
+    body: new URLSearchParams({
+      q: selectedData,
+      target: langSelect,
+    }),
+  };
+
+  (async () => {
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      console.log("TRANSLTED TEXT: ", result);
+      translatedText.value = result.data.translations[0].translatedText;
+    } catch (error) {
+      console.error(error);
+    }
+  })();
+};
