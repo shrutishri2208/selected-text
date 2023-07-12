@@ -130,7 +130,8 @@ p {
   margin: 2rem 0rem;
 }
 
-.translate-container p {
+.translate-container p,
+.error {
   font-size: 0.9rem;
   font-weight: bolder;
   color: var(--orange);
@@ -163,4 +164,11 @@ p {
   height: 0.1rem;
   width: 100%;
   background-color: var(--orange);
+}
+
+#error {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  font-weight: bolder;
+  color: white;
 }

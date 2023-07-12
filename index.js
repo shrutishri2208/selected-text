@@ -10,6 +10,8 @@ const examples = document.getElementById("examples");
 
 const checkbox = document.querySelectorAll(".checkbox");
 
+const errorLine = document.getElementById("error");
+
 // const langSelect = document.getElementById("langSelect");
 
 let isActive = {
@@ -110,10 +112,15 @@ const getWordDetails = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      displayDef(result);
-      displaySyn(result);
-      displayPart(result);
-      displayPro(result);
+      if (!response.ok) {
+        if (response.status === 429)
+          errorLine.innerText = "Wait for some time! The server is busy :(";
+      } else {
+        displayDef(result);
+        displaySyn(result);
+        displayPart(result);
+        displayPro(result);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -136,7 +143,12 @@ const getOpposites = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      displayAnt(result);
+      if (!response.ok) {
+        if (response.status === 429)
+          errorLine.innerText = "Wait for some time! The server is busy :(";
+      } else {
+        displayAnt(result);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -159,7 +171,12 @@ const getExamples = (selectedData) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      displayExa(result);
+      if (!response.ok) {
+        if (response.status === 429)
+          errorLine.innerText = "Wait for some time! The server is busy :(";
+      } else {
+        displayExa(result);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -218,23 +235,19 @@ const displayExa = (result) => {
   }
 };
 
-// langSelect.addEventListener("change", () => {
-//   getTranslatedText(selectedData, langSelect.value);
-// });
-
 const getTranslatedText = (selectedData, langSelect) => {
-  const url = "https://google-translate1.p.rapidapi.com/language/translate/v2";
+  const url = "https://google-translate105.p.rapidapi.com/v1/rapid/translate";
   const options = {
     method: "POST",
     headers: {
       "content-type": "application/x-www-form-urlencoded",
-      "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Key": "6624c4b9cdmsh7534e3ca67f64ddp18e5e9jsn2a8c6588663e",
-      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+      "X-RapidAPI-Key": "89209a214bmshb6c942f8ebdcd81p1deba7jsnf758971b30de",
+      "X-RapidAPI-Host": "google-translate105.p.rapidapi.com",
     },
     body: new URLSearchParams({
-      q: selectedData,
-      target: langSelect,
+      text: selectedData,
+      to_lang: langSelect,
+      from_lang: "en",
     }),
   };
 
@@ -242,8 +255,45 @@ const getTranslatedText = (selectedData, langSelect) => {
     try {
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log("TRANSLTED TEXT: ", result);
-      translatedText.value = result.data.translations[0].translatedText;
+      if (!response.ok) {
+        if (response.status === 429)
+          translatedText.value = "Wait for some time! The server is busy :(";
+        getTranslatedText2(selectedData, langSelect);
+      } else {
+        translatedText.value = result.translated_text;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  })();
+};
+
+const getTranslatedText2 = (selectedData, langSelect) => {
+  const url = "https://google-translate105.p.rapidapi.com/v1/rapid/translate";
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "X-RapidAPI-Key": "6624c4b9cdmsh7534e3ca67f64ddp18e5e9jsn2a8c6588663e",
+      "X-RapidAPI-Host": "google-translate105.p.rapidapi.com",
+    },
+    body: new URLSearchParams({
+      text: "hello",
+      to_lang: "ar",
+      from_lang: "en",
+    }),
+  };
+
+  (async () => {
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      if (!response.ok) {
+        if (response.status === 429)
+          translatedText.value = "Wait for some time! The server is busy :(";
+      } else {
+        translatedText.value = result.translated_text;
+      }
     } catch (error) {
       console.error(error);
     }
